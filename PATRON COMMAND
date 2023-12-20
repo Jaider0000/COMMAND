@@ -1,0 +1,87 @@
+using System;
+
+// Interfaz del comando
+interface ICommand
+{
+    void Execute();
+    void Undo();
+}
+
+// Clase concreta que implementa la interfaz ICommand
+class ConcreteCommand : ICommand
+{
+    private Receiver receiver;
+
+    public ConcreteCommand(Receiver receiver)
+    {
+        this.receiver = receiver;
+    }
+
+    public void Execute()
+    {
+        receiver.Action();
+    }
+
+    public void Undo()
+    {
+        receiver.UndoAction();
+    }
+}
+
+// Clase que representa al receptor
+class Receiver
+{
+    public void Action()
+    {
+        Console.WriteLine("Ejecutando la acción");
+    }
+
+    public void UndoAction()
+    {
+        Console.WriteLine("Deshaciendo la acción");
+    }
+}
+
+// Clase invocadora
+class Invoker
+{
+    private ICommand command;
+
+    public void SetCommand(ICommand command)
+    {
+        this.command = command;
+    }
+
+    public void ExecuteCommand()
+    {
+        command.Execute();
+    }
+
+    public void UndoCommand()
+    {
+        command.Undo();
+    }
+}
+
+// Programa principal
+class Program
+{
+    static void Main()
+    {
+        // Crear instancia del receptor
+        Receiver receiver = new Receiver();
+
+        // Crear instancia del comando concreto y asociarlo con el receptor
+        ICommand command = new ConcreteCommand(receiver);
+
+        // Crear instancia del invocador y configurarlo con el comando
+        Invoker invoker = new Invoker();
+        invoker.SetCommand(command);
+
+        // Ejecutar el comando
+        invoker.ExecuteCommand();
+
+        // Deshacer el comando
+        invoker.UndoCommand();
+    }
+}
